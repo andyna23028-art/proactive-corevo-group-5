@@ -15,9 +15,9 @@ const DashboardCard = ({ title, content, link, linkText, style, icon }) => (
             <p className="text-muted" style={{ fontSize: '0.9rem' }}>{content}</p>
             {icon && <div className="mb-3">{icon}</div>}
             {linkText && (
-                <Button as={Link} to={link} variant="link" className="p-0 text-white" style={style}>
-                    {linkText}
-                </Button>
+                <Button as={Link} to={link} className="btn btn-primary btn-sm fw-semibold" style={style}>
+  {linkText}
+</Button>
             )}
         </Card.Body>
     </Card>
