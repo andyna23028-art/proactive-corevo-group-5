@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Table, Modal, Toast, ToastContainer } from 'react-bootstrap'; 
-import { Search, PencilSquare, TrashFill, CheckCircleFill, DashCircleFill, PencilSquare as IconPencil } from 'react-bootstrap-icons'; // 👈 Import ikon yang diperlukan
-import AppNavbar from '../components/Navbar'; 
-import PerformanceModal from '../components/PerformanceModal'; 
-// import api from '../api/api'; 
+import {
+    Container,
+    Form,
+    Button,
+    Table,
+    Toast,
+    ToastContainer,
+    OverlayTrigger, // Diperlukan untuk Popover
+    Popover,        // Diperlukan untuk Popover
+} from 'react-bootstrap';
+import {
+    Search,
+    PencilSquare,
+    TrashFill,
+    CheckCircleFill,
+    DashCircleFill,
+    PencilSquare as IconPencil
+} from 'react-bootstrap-icons';
+import AppNavbar from '../components/Navbar';
+import PerformanceModal from '../components/PerformanceModal.js';
+import PerformanceDetailsModal from '../components/PerformanceDetailsModal.js';
 
 // Data Dummy Awal
 const INITIAL_PERFORMANCE_DATA = [
@@ -17,57 +33,26 @@ const INITIAL_PERFORMANCE_DATA = [
     { id: 8, employeeName: 'Thomas Herve', goalAchievement: 5, knowledgeSkills: 4, behaviorWorkEthic: 5, disciplineReliability: 5 },
 ];
 
-// Komponen Konfirmasi Hapus (Tidak Berubah)
-const DeleteConfirmationModal = ({ show, handleClose, handleConfirm }) => {
-    return (
-        <Modal 
-            show={show} 
-            onHide={handleClose} 
-            centered 
-            dialogClassName="modal-sm"
-        >
-            <Modal.Body className="p-4">
-                <h4 className="mb-4">Are you sure you want to delete it?</h4> 
-                
-                <div className="d-flex justify-content-end gap-2">
-                    <Button 
-                        variant="light" 
-                        onClick={handleClose}
-                        style={{ borderRadius: '5px' }} 
-                    >
-                        No
-                    </Button>
-                    <Button 
-                        variant="danger" 
-                        onClick={handleConfirm}
-                        style={{ borderRadius: '5px', fontWeight: 'bold' }}
-                    >
-                        Yes
-                    </Button>
-                </div>
-            </Modal.Body>
-        </Modal>
-    );
-};
+// Catatan: Komponen DeleteConfirmationModal telah dihapus
 
-// 🌟 KOMPONEN NOTIFIKASI BARU (TOAST) - Disesuaikan dengan penempatan tengah dan gaya kustom
+// 🔔 KOMPONEN ACTION TOAST (POSISI KANAN BAWAH) 🔔
 const ActionToast = ({ show, handleClose, title, subtitle, icon: IconComponent, variant }) => {
     let bgColor, iconColor, borderColor;
-    
+
     switch (variant) {
         case 'added':
-            bgColor = '#e6f7ff'; // Biru sangat muda (New report added)
-            iconColor = '#1890ff'; // Biru
+            bgColor = '#e6f7ff';
+            iconColor = '#1890ff';
             borderColor = '#91d5ff';
             break;
         case 'updated':
-            bgColor = '#fffbe6'; // Kuning sangat muda (Training report updated)
-            iconColor = '#faad14'; // Kuning
+            bgColor = '#fffbe6';
+            iconColor = '#faad14';
             borderColor = '#ffe58f';
             break;
         case 'deleted':
-            bgColor = '#fff1f0'; // Merah sangat muda (Training report deleted)
-            iconColor = '#f5222d'; // Merah
+            bgColor = '#fff1f0';
+            iconColor = '#f5222d';
             borderColor = '#ffa39e';
             break;
         default:
@@ -76,44 +61,31 @@ const ActionToast = ({ show, handleClose, title, subtitle, icon: IconComponent, 
             borderColor = '#91d5ff';
     }
 
-    // PENTING: Kustom CSS untuk menengahkan Toast (sama seperti modal centered)
-    const centeredStyle = {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 1080, // Pastikan di atas semua elemen lain
-        maxWidth: '350px' // Batasi lebar agar ringkas/kecil
-    };
-
     return (
-        <ToastContainer style={centeredStyle}>
-            <Toast 
-                onClose={handleClose} 
-                show={show} 
-                delay={4000} 
-                autohide 
-                className="shadow-lg" // Menambahkan shadow agar mirip card
-                style={{ 
-                    backgroundColor: bgColor, 
+        <ToastContainer position="bottom-end" className="p-3" style={{ zIndex: 1080 }}>
+            <Toast
+                onClose={handleClose}
+                show={show}
+                delay={4000}
+                autohide
+                className="shadow-lg"
+                style={{
+                    backgroundColor: bgColor,
                     border: `1px solid ${borderColor}`,
-                    color: '#000', 
+                    color: '#000',
                     borderRadius: '8px',
-                    width: '100%',
+                    width: '350px',
                 }}
             >
                 <Toast.Body className="d-flex align-items-start p-3">
-                    {/* Ikon Kustom */}
                     {IconComponent && (
                         <IconComponent size={20} className="me-3 mt-1" style={{ color: iconColor }} />
                     )}
-                    
+
                     <div>
-                        {/* Judul Tebal */}
                         <p className="mb-1 fw-bold" style={{ fontSize: '0.9rem' }}>
                             {title}
                         </p>
-                        {/* Subtitle Normal */}
                         <small style={{ fontSize: '0.8rem' }}>
                             {subtitle}
                         </small>
@@ -124,23 +96,31 @@ const ActionToast = ({ show, handleClose, title, subtitle, icon: IconComponent, 
     );
 };
 
+// --- KOMPONEN UTAMA PenilaianKinerja ---
 export default function PenilaianKinerja() {
     const [showModal, setShowModal] = useState(false);
     const [performanceData, setPerformanceData] = useState(INITIAL_PERFORMANCE_DATA);
     const [searchTerm, setSearchTerm] = useState('');
     const [dataToEdit, setDataToEdit] = useState(null);
-    
-    // State untuk Modal Hapus
-    const [idToDelete, setIdToDelete] = useState(null);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    // 🌟 STATE BARU UNTUK TOAST NOTIFIKASI
+    // State untuk Popover Hapus (Menyimpan ID yang sedang aktif)
+    const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+    // State untuk Toast Notifikasi
     const [showToast, setShowToast] = useState(false);
     const [toastTitle, setToastTitle] = useState('');
     const [toastSubtitle, setToastSubtitle] = useState('');
-    const [toastIcon, setToastIcon] = useState(null); // Menyimpan komponen ikon
-    const [toastVariant, setToastVariant] = useState('added'); // Menggunakan custom variant 'added', 'updated', 'deleted'
-    
+    const [toastIcon, setToastIcon] = useState(null);
+    const [toastVariant, setToastVariant] = useState('added');
+
+    // State untuk mengontrol PerformanceDetailsModal (Pop-up Awal)
+    const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+
+    // Fungsi untuk menutup Modal Detail Kinerja
+    const handleCloseWelcomeModal = () => {
+        setShowWelcomeModal(false);
+    };
+
     // Fungsi untuk menampilkan Toast
     const triggerToast = (title, subtitle, icon, variant) => {
         setToastTitle(title);
@@ -158,7 +138,7 @@ export default function PenilaianKinerja() {
     };
 
     const handleShowCreate = () => {
-        setDataToEdit(null); 
+        setDataToEdit(null);
         setShowModal(true);
     };
 
@@ -166,84 +146,83 @@ export default function PenilaianKinerja() {
         setDataToEdit(data);
         setShowModal(true);
     };
-    
+
     // --- LOGIKA CREATE/EDIT SAVE ---
     const handleSavePerformance = (newData) => {
         let actionMessageTitle = '';
         let actionMessageSubtitle = '';
         let actionVariant = '';
-        let actionIcon = CheckCircleFill; // Default untuk Added
+        let actionIcon = CheckCircleFill;
 
         if (dataToEdit) {
             // Mode Edit: Update data yang sudah ada
-            setPerformanceData(prev => prev.map(item => 
+            setPerformanceData(prev => prev.map(item =>
                 item.id === dataToEdit.id ? { ...newData, id: item.id } : item
             ));
             actionMessageTitle = 'Employee Performance Updated';
-            actionMessageSubtitle = 'Your changes have been saved.';
+            actionMessageSubtitle = `Performance record for ${newData.employeeName} has been saved.`;
             actionVariant = 'updated';
             actionIcon = IconPencil;
         } else {
             // Mode Create: Tambahkan data baru
             const maxId = performanceData.length > 0 ? Math.max(...performanceData.map(item => item.id)) : 0;
-            const newId = maxId + 1; 
+            const newId = maxId + 1;
             setPerformanceData(prev => [...prev, { ...newData, id: newId }]);
             actionMessageTitle = 'New Employee Performance Added';
-            actionMessageSubtitle = 'The new performance record has been successfully created.';
+            actionMessageSubtitle = `A new record for ${newData.employeeName} has been created.`;
             actionVariant = 'added';
             actionIcon = CheckCircleFill;
         }
-        
+
         handleCloseModal();
-        // 🌟 Panggil dengan detail baru
-        triggerToast(actionMessageTitle, actionMessageSubtitle, actionIcon, actionVariant); 
-    };
-    
-    // --- LOGIKA HAPUS ---
-    const handleShowDeleteConfirm = (id) => {
-        setIdToDelete(id);
-        setShowDeleteModal(true);
+        triggerToast(actionMessageTitle, actionMessageSubtitle, actionIcon, actionVariant);
     };
 
-    const handleDelete = () => {
-        if (idToDelete) {
-            setPerformanceData(prev => prev.filter(item => item.id !== idToDelete));
+    // --- LOGIKA HAPUS (DARI Popover) ---
+    const handleDelete = (id) => {
+        const deletedEmployee = performanceData.find(item => item.id === id)?.employeeName || 'Selected Employee';
+
+        if (id) {
+            setPerformanceData(prev => prev.filter(item => item.id !== id));
         }
-        setShowDeleteModal(false); 
-        setIdToDelete(null);
 
-        // 🌟 Tampilkan notifikasi Delete
+        // Tutup Popover
+        setDeleteConfirmId(null);
+
+        // Tampilkan notifikasi Delete
         triggerToast(
-            'Employee Performance Deleted', 
-            'The selected record has been permanently removed.', 
-            DashCircleFill, 
+            'Employee Performance Deleted',
+            `The record for ${deletedEmployee} has been permanently removed.`,
+            DashCircleFill,
             'deleted'
         );
     };
-    
-    const handleCancelDelete = () => {
-        setShowDeleteModal(false);
-        setIdToDelete(null);
-    }
+
 
     // Filter data berdasarkan search term
-    const filteredData = performanceData.filter(employee => 
+    const filteredData = performanceData.filter(employee =>
         employee.employeeName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // SORTING DATA TERBARU DI ATAS (Berdasarkan ID terbesar)
     const sortedData = [...filteredData].sort((a, b) => b.id - a.id);
-    
+
     return (
         <>
-            <AppNavbar isLoggedIn={true} activePage="Performance" /> 
+            <AppNavbar isLoggedIn={true} activePage="Performance" />
+
+            {/* Modal Detail Kinerja */}
+            <PerformanceDetailsModal
+                show={showWelcomeModal}
+                handleClose={handleCloseWelcomeModal}
+            />
 
             <Container fluid className="mt-4 px-4">
                 <h1 className="fw-bold fs-3">Manage Performance</h1>
                 <p className="text-muted">Engage with your team through games and discussions</p>
-                
-                <div className="card shadow-sm rounded-4" 
-                    style={{ borderRadius: '20px', border: '1px solid #c2e0ff', padding: '1.5rem' }}> 
+
+                <div className="card shadow-sm rounded-4"
+                    style={{ borderRadius: '20px', border: '1px solid #c2e0ff', padding: '1.5rem' }}>
 
                     {/* Search Bar dan Tombol Create */}
                     <div className="d-flex justify-content-between align-items-center mb-4">
@@ -253,28 +232,28 @@ export default function PenilaianKinerja() {
                                 type="search"
                                 placeholder="Search employee performance..."
                                 className="rounded-3 ps-5 border-secondary-subtle"
-                                style={{ 
-                                    width: '380px', 
-                                    height: '43px', 
-                                    fontSize: '0.9rem', 
-                                    borderRadius: '10px' 
+                                style={{
+                                    width: '380px',
+                                    height: '43px',
+                                    fontSize: '0.9rem',
+                                    borderRadius: '10px'
                                 }}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
 
-                        <Button 
-                            variant="primary" 
+                        <Button
+                            variant="primary"
                             className="fw-semibold"
                             onClick={handleShowCreate}
-                            style={{ 
-                                fontSize: '0.9rem', 
+                            style={{
+                                fontSize: '0.9rem',
                                 borderRadius: '10px',
-                                display: 'flex', 
-                                alignItems: 'center', 
+                                display: 'flex',
+                                alignItems: 'center',
                                 justifyContent: 'center',
-                                padding: '0.5rem 1rem' 
+                                padding: '0.5rem 1rem'
                             }}
                         >
                             + Create New
@@ -302,25 +281,61 @@ export default function PenilaianKinerja() {
                                     <td className="align-middle" style={{ textAlign: 'center' }}>{employee.behaviorWorkEthic}</td>
                                     <td className="align-middle" style={{ textAlign: 'center' }}>{employee.disciplineReliability}</td>
                                     <td className="d-flex align-items-center justify-content-center pt-3">
-                                        
-                                        <Button 
-                                            variant="warning" 
-                                            size="sm" 
-                                            className="me-2 text-white" 
+
+                                        <Button
+                                            variant="warning"
+                                            size="sm"
+                                            className="me-2 text-white"
                                             style={{ backgroundColor: '#fcd34d', border: 'none', borderRadius: '10px', width: '35px', height: '35px' }}
-                                            onClick={() => handleEdit(employee)} 
+                                            onClick={() => handleEdit(employee)}
                                         >
                                             <PencilSquare size={16} />
                                         </Button>
-                                        
-                                        <Button 
-                                            variant="danger" 
-                                            size="sm"
-                                            style={{ backgroundColor: '#f87171', border: 'none', borderRadius: '10px', width: '35px', height: '35px' }}
-                                            onClick={() => handleShowDeleteConfirm(employee.id)} 
+
+                                        {/* ⭐️ POPUP DELETE MENGGUNAKAN OVERLAYTRIGGER DAN POPOVER ⭐️ */}
+                                        <OverlayTrigger
+                                            trigger="click"
+                                            placement="left"
+                                            rootClose
+                                            show={deleteConfirmId === employee.id}
+                                            onToggle={(next) => setDeleteConfirmId(next ? employee.id : null)}
+                                            overlay={
+                                                <Popover id={`popover-delete-${employee.id}`} className="shadow border-0">
+                                                    <Popover.Body className="text-center p-3">
+                                                        <p className="small fw-bold mb-3 text-dark">Are you sure you<br />want to delete it?</p>
+                                                        <div className="d-flex justify-content-center gap-2">
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline-secondary"
+                                                                className="px-3 rounded-pill"
+                                                                onClick={() => setDeleteConfirmId(null)} // Tutup Popover
+                                                            >
+                                                                No
+                                                            </Button>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="danger"
+                                                                className="px-3 rounded-pill"
+                                                                onClick={() => handleDelete(employee.id)} // Lakukan penghapusan
+                                                            >
+                                                                Yes
+                                                            </Button>
+                                                        </div>
+                                                    </Popover.Body>
+                                                </Popover>
+                                            }
                                         >
-                                            <TrashFill size={16} />
-                                        </Button>
+                                            <Button
+                                                variant="danger"
+                                                size="sm"
+                                                style={{ backgroundColor: '#f87171', border: 'none', borderRadius: '10px', width: '35px', height: '35px' }}
+                                                // Tidak perlu onClick karena OverlayTrigger akan mengurus trigger 'click'
+                                            >
+                                                <TrashFill size={16} />
+                                            </Button>
+                                        </OverlayTrigger>
+                                        {/* ⭐️ AKHIR POPUP DELETE ⭐️ */}
+
                                     </td>
                                 </tr>
                             ))}
@@ -333,21 +348,16 @@ export default function PenilaianKinerja() {
             </Container>
 
             {/* Modal Create/Edit */}
-            <PerformanceModal 
-                show={showModal} 
+            <PerformanceModal
+                show={showModal}
                 handleClose={handleCloseModal}
                 handleSubmit={handleSavePerformance}
                 initialData={dataToEdit}
             />
-            
-            {/* Modal Konfirmasi Hapus */}
-            <DeleteConfirmationModal
-                show={showDeleteModal}
-                handleClose={handleCancelDelete}
-                handleConfirm={handleDelete}
-            />
 
-            {/* 🌟 KOMPONEN NOTIFIKASI TOAST BARU 🌟 */}
+            {/* Catatan: DeleteConfirmationModal telah dihapus */}
+
+            {/* Komponen Notifikasi Toast (Di Kanan Bawah) */}
             <ActionToast
                 show={showToast}
                 handleClose={handleCloseToast}
