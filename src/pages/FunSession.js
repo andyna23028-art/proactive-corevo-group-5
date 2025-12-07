@@ -1,142 +1,167 @@
-import React, { useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { Clock, People, CalendarCheck } from 'react-bootstrap-icons';
-import AppNavbar from '../components/Navbar';
+import React, { useState } from "react";
+import { Container, Button, Card, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Clock, People, CalendarCheck } from "react-bootstrap-icons";
+import AppNavbar from "../components/Navbar";
 
-// Data Dummy Sesi
+// Data dummy – disesuaikan agar hanya 1 sesi upcoming seperti di Figma
 const SESSIONS = [
-    {
-        id: 1,
-        title: 'Mind Stretch',
-        description: 'Take a short break to clear your mind and boost your creativity.',
-        time: 'Today, 3:00 PM',
-        duration: '40 min',
-        participants: 30,
-        host: 'Admin',
-        type: 'upcoming', // Key untuk filter
-    },
-    {
-        id: 2,
-        title: 'Echo Room',
-        description: 'A safe space to express your thoughts and everything else.',
-        time: 'Today, 3:05 PM',
-        duration: '40 min',
-        participants: 30,
-        host: 'Admin',
-        type: 'upcoming',
-    },
-    {
-        id: 3,
-        title: 'Reflect & Grow',
-        description: 'Review the week and set goals for the next one.',
-        time: 'Yesterday, 10:00 AM',
-        duration: '60 min',
-        participants: 25,
-        host: 'Team Lead',
-        type: 'past',
-    },
+  {
+    id: 1,
+    title: "Mind Stretch",
+    description:
+      "Take a short break to clear your mind and boost your creativity.",
+    time: "Today, 3:00 PM",
+    duration: "40 min",
+    participants: 30,
+    host: "Admin",
+    type: "upcoming",
+  },
+  {
+    id: 2,
+    title: "Echo Room",
+    description: "A safe space to express your thoughts and everything else.",
+    time: "Yesterday, 3:05 PM",
+    duration: "40 min",
+    participants: 30,
+    host: "Admin",
+    type: "past",
+  },
+  {
+    id: 3,
+    title: "Reflect & Grow",
+    description: "Review the week and set goals for the next one.",
+    time: "Last week, 10:00 AM",
+    duration: "60 min",
+    participants: 25,
+    host: "Team Lead",
+    type: "past",
+  },
 ];
 
-// Komponen Card Sesi
-const SessionCard = ({ session, isUpcoming }) => {
-    const iconColor = isUpcoming ? '#3b82f6' : '#6c757d'; // Warna biru untuk Upcoming
-    const bgColor = isUpcoming ? '#eff6ff' : '#f8f9fa';
+const SessionCard = ({ session }) => {
+  return (
+    <Card className="shadow-sm border-0 fun-card">
+      <Card.Body className="p-4">
+        <Row>
+          {/* Icon bulat biru di kiri */}
+          <Col xs="auto" className="pe-0">
+            <div className="fun-card-icon-circle">
+              <CalendarCheck size={24} />
+            </div>
+          </Col>
 
-    return (
-        <div className="mb-4 p-4 rounded-3 shadow-sm" style={{ border: `2px solid ${iconColor}`, backgroundColor: bgColor }}>
-            <div className="d-flex align-items-center mb-2">
-                <CalendarCheck size={24} className="me-3" style={{ color: iconColor }} />
-                <div>
-                    <h5 className="fw-bold mb-0">{session.title}</h5>
-                    <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>{session.description}</p>
-                </div>
+          {/* Info utama */}
+          <Col>
+            <h6 className="fw-semibold mb-1">{session.title}</h6>
+            <p className="text-muted small mb-3">
+              {session.description}
+            </p>
+
+            <div className="d-flex flex-wrap gap-3 text-muted small">
+              <div className="d-flex align-items-center">
+                <CalendarCheck size={14} className="me-1" />
+                {session.time}
+              </div>
+              <div className="d-flex align-items-center">
+                <Clock size={14} className="me-1" />
+                {session.duration}
+              </div>
+              <div className="d-flex align-items-center">
+                <People size={14} className="me-1" />
+                {session.participants} participants
+              </div>
             </div>
-            
-            <div className="ms-5 ps-1 mt-3 d-flex gap-4 text-muted" style={{ fontSize: '0.9rem' }}>
-                <div className="d-flex align-items-center">
-                    <Clock size={16} className="me-1" /> {session.time}
-                </div>
-                <div className="d-flex align-items-center">
-                    <Clock size={16} className="me-1" /> {session.duration}
-                </div>
-                <div className="d-flex align-items-center">
-                    <People size={16} className="me-1" /> {session.participants} participants
-                </div>
-            </div>
-            
-            <div className="ms-5 ps-1 mt-3 d-flex justify-content-between align-items-center">
-                <span className="text-muted" style={{ fontSize: '0.85rem' }}>Hosted by {session.host}</span>
-                {isUpcoming ? (
-                    <Button variant="warning" size="sm" style={{ backgroundColor: '#ffc107', borderColor: '#ffc107', color: 'black' }}>
-                        Start Session
-                    </Button>
-                ) : (
-                    <Button variant="outline-primary" size="sm">
-                        View Details
-                    </Button>
-                )}
-            </div>
+          </Col>
+        </Row>
+
+        <hr className="my-3" />
+
+        <div className="d-flex justify-content-between align-items-center">
+          <span className="text-muted small">Hosted by {session.host}</span>
+
+          <Button
+            as={Link}
+            to={`/funsession/${session.id}`}
+            size="sm"
+            className="fun-start-btn fw-semibold"
+          >
+            Start Session
+          </Button>
         </div>
-    );
+      </Card.Body>
+    </Card>
+  );
 };
 
 export default function FunSession() {
-    const [filter, setFilter] = useState('upcoming'); // State untuk filter: 'upcoming' atau 'past'
+  const [filter, setFilter] = useState("upcoming");
 
-    const filteredSessions = SESSIONS.filter(session => session.type === filter);
-    
-    // Perbaikan: Tambahkan logic untuk tombol "Create New" yang hanya muncul di Upcoming.
-    const showCreateNew = filter === 'upcoming'; 
-    
-    return (
-        <>
-            <AppNavbar isLoggedIn={true} activePage="Fun Session" />
-            <Container fluid className="mt-4 px-4">
-                {/* Header */}
-                <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h1 className="fw-bold fs-3">Fun Session</h1>
-                        <p className="text-muted">Engage with your team through games and discussions</p>
-                    </div>
-                    {showCreateNew && (
-                        <Button variant="primary" as={Link} to="/funsession/create">
-                            Create New
-                        </Button>
-                    )}
-                </div>
+  const filteredSessions = SESSIONS.filter(
+    (session) => session.type === filter
+  );
 
-                {/* Tombol Filter */}
-                <div className="mb-4 d-flex gap-2">
-                    <Button 
-                        variant={filter === 'upcoming' ? 'primary' : 'outline-primary'}
-                        onClick={() => setFilter('upcoming')}
-                        className="fw-semibold"
-                    >
-                        Upcoming
-                    </Button>
-                    <Button 
-                        variant={filter === 'past' ? 'primary' : 'outline-primary'}
-                        onClick={() => setFilter('past')}
-                        className="fw-semibold"
-                    >
-                        Past Session
-                    </Button>
-                </div>
+  const showCreateNew = filter === "upcoming";
 
-                {/* Daftar Sesi */}
-                {filteredSessions.length > 0 ? (
-                    filteredSessions.map(session => (
-                        <SessionCard 
-                            key={session.id} 
-                            session={session} 
-                            isUpcoming={session.type === 'upcoming'} 
-                        />
-                    ))
-                ) : (
-                    <p className="text-center text-muted mt-5">No {filter} sessions found.</p>
-                )}
-            </Container>
-        </>
-    );
+  return (
+    <>
+      <AppNavbar isLoggedIn={true} activePage="Fun Session" />
+
+      <Container fluid className="mt-4 px-4 pb-5 fun-session-container">
+        {/* HEADER */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 className="fw-bold fs-3 mb-1">Fun Session</h1>
+            <p className="text-muted mb-0">
+              Engage with your team through games and discussions
+            </p>
+          </div>
+
+          {showCreateNew && (
+            <Button
+              variant="primary"
+              as={Link}
+              to="/funsession/create"
+              className="fun-create-btn px-4"
+            >
+              Create New
+            </Button>
+          )}
+        </div>
+
+        {/* TAB FILTER */}
+        <div className="mb-4 d-flex gap-2">
+          <Button
+            className={`fun-tab-btn ${
+              filter === "upcoming" ? "active" : ""
+            }`}
+            onClick={() => setFilter("upcoming")}
+          >
+            Upcoming
+          </Button>
+          <Button
+            className={`fun-tab-btn ${filter === "past" ? "active" : ""}`}
+            onClick={() => setFilter("past")}
+          >
+            Past Session
+          </Button>
+        </div>
+
+        {/* LIST SESI – dibungkus untuk lebar mirip Figma */}
+        <div className="fun-card-wrapper">
+          {filteredSessions.length > 0 ? (
+            filteredSessions.map((session) => (
+              <div key={session.id} className="mb-4">
+                <SessionCard session={session} />
+              </div>
+            ))
+          ) : (
+            <p className="text-muted mt-5 text-center">
+              No {filter} sessions found.
+            </p>
+          )}
+        </div>
+      </Container>
+    </>
+  );
 }

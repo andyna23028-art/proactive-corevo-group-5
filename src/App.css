@@ -1,3 +1,7 @@
+/* ===========================
+   REACT DEFAULT STYLES
+=========================== */
+
 .App {
   text-align: center;
 }
@@ -37,16 +41,153 @@
   }
 }
 
-/* --- HIDE DEFAULT SPINNER ARROWS FOR INPUT TYPE="NUMBER" --- */
+/* ===========================
+   FIX SPINNER INPUT NUMBER
+=========================== */
 
-/* For Chrome, Safari, Edge, Opera */
+/* Chrome, Safari, Edge, Opera */
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-/* For Firefox */
+/* Firefox */
 input[type=number] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* ===========================
+   HOME PAGE CUSTOM STYLES
+   (MIRIP FIGMA)
+=========================== */
+
+/* Greeting Title */
+.home-greeting-title {
+  font-size: 1.7rem;
+  letter-spacing: -0.3px;
+}
+
+/* Card besar (Manage Performance, Training Report, Unlock Wins, Fun Session) */
+.home-primary-card {
+  border-radius: 18px;
+  background: #f3f7ff; /* light blue */
+  padding: 8px !important;
+}
+
+/* Gradient button panjang */
+.home-gradient-btn {
+  border-radius: 999px;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.9rem;
+  background-image: linear-gradient(90deg, #007bff, #1e90ff);
+  color: #fff !important;
+}
+
+.home-gradient-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* Let's Chat cards */
+.home-chat-card {
+  border-radius: 18px;
+  padding: 6px;
+}
+
+.home-chat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background-color: #f1f1f1;
+}
+
+/* Card kecil Fun Session di HOME */
+.home-session-inner-card {
+  border-radius: 18px;
+  background: #eaf2ff;
+  border: 1px solid #c9d9ff;
+}
+
+.home-session-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 2px solid #1e90ff;
+  background-color: #1e90ff;
+}
+
+/* Tombol Start Session di HOME */
+.home-session-start-btn {
+  border-radius: 999px;
+  padding: 0.35rem 1.4rem;
+  font-size: 0.85rem;
+  background-color: #ffb534;
+  border-color: #ffb534;
+  color: #000 !important;
+}
+
+.home-session-start-btn:hover {
+  background-color: #ffa826;
+  border-color: #ffa826;
+  color: #000 !important;
+}
+
+/* ===========================
+   FUN SESSION PAGE (FIGMA STYLE)
+=========================== */
+
+/* Tombol Create New */
+.fun-create-btn {
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+/* Tab filter (Upcoming / Past Session) */
+.fun-tab-btn {
+  border-radius: 999px;
+  padding: 0.35rem 1.5rem;
+  font-size: 0.85rem;
+  border: 1px solid #007bff;
+  background-color: #ffffff;
+  color: #007bff;
+}
+
+.fun-tab-btn.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+/* Card utama Fun Session */
+.fun-card {
+  border-radius: 18px;
+  background-color: #eaf4ff; /* biru muda seperti di Figma */
+}
+
+/* Icon lingkaran di kiri card */
+.fun-card-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #4c8dff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+/* Tombol Start Session (orange pill) */
+.fun-start-btn {
+  border-radius: 999px;
+  padding: 0.35rem 1.6rem;
+  font-size: 0.85rem;
+  background-color: #ffb534;
+  border-color: #ffb534;
+  color: #000000;
+}
+
+.fun-start-btn:hover {
+  background-color: #ffa826;
+  border-color: #ffa826;
+  color: #000000;
 }

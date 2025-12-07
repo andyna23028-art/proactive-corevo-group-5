@@ -9,8 +9,11 @@ import ReportLayout from './components/ReportLayout';
 import PrivateRoute from './components/PrivateRoute';
 import Home from './pages/Home'; 
 import FunSession from './pages/FunSession'; 
+import FunSessionDetail from "./pages/FunSessionDetail";
 import Reward from './pages/Reward';
 import ProfileIP from './pages/ProfileIP';
+import "./App.css";
+
 
 function App() {
   return (
@@ -23,40 +26,77 @@ function App() {
 
         {/* Protected routes */}
 
-        {/* Rute Halaman Home */}
-        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-        
-        {/* Rute Halaman Fun Session */}
-        <Route path="/funsession" element={<PrivateRoute><FunSession /></PrivateRoute>} />
-
-        {/* Rute Halaman Performance/Penilaian Kinerja */}
+        {/* Home */}
         <Route
-            path="/performance"
-            element={<PrivateRoute><PenilaianKinerja /></PrivateRoute>}
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
         />
 
-        {/* Rute Halaman Reward */}
-        <Route path="/reward" element={<PrivateRoute><Reward /></PrivateRoute>} />
+        {/* Fun Session list */}
+        <Route
+          path="/funsession"
+          element={
+            <PrivateRoute>
+              <FunSession />
+            </PrivateRoute>
+          }
+        />
 
-        {/* Rute Halaman Training Report */}
+        {/* Fun Session detail (Start Session → masuk sini) */}
+        <Route
+          path="/funsession/:id"
+          element={
+            <PrivateRoute>
+              <FunSessionDetail />   {/* ← ini yang benar bos muda */}
+            </PrivateRoute>
+          }
+        />
+
+        {/* Performance / Penilaian Kinerja */}
+        <Route
+          path="/performance"
+          element={
+            <PrivateRoute>
+              <PenilaianKinerja />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Reward */}
+        <Route
+          path="/reward"
+          element={
+            <PrivateRoute>
+              <Reward />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Training Report */}
         <Route
           path="/training-report"
-          element={<PrivateRoute><ReportLayout /></PrivateRoute>}
+          element={
+            <PrivateRoute>
+              <ReportLayout />
+            </PrivateRoute>
+          }
         />
 
-        {/* Route untuk Halaman Profile */}
-        <Route 
-          path="/profile" 
-          element={<PrivateRoute><ProfileIP /></PrivateRoute>} />
+        {/* Profile IP */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfileIP />
+            </PrivateRoute>
+          }
+        />
 
-        
-
-        {/* Rute-rute kosong lainnya sebagai protected route agar Navbar berfungsi */}
-        {/* <Route path="/home" element={<PrivateRoute><h3 className="text-center mt-5">Home Page (Protected)</h3></PrivateRoute>} />
-        <Route path="/funsession" element={<PrivateRoute><h3 className="text-center mt-5">Fun Session Page (Protected)</h3></PrivateRoute>} />
-        <Route path="/reward" element={<PrivateRoute><h3 className="text-center mt-5">Reward Page (Protected)</h3></PrivateRoute>} /> */}
-
-        {/* Fallback 404 */}
+        {/* 404 */}
         <Route path="*" element={<h3 className="text-center mt-5">404 Not Found</h3>} />
       </Routes>
     </Router>
