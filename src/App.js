@@ -1,3 +1,4 @@
+// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -6,7 +7,6 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 
 import PenilaianKinerja from "./pages/PenilaianKinerja";
-import TrainingReport from "./pages/TrainingReport"; // kalau dipakai di tempat lain
 import ReportLayout from "./components/ReportLayout";
 
 import PrivateRoute from "./components/PrivateRoute";
@@ -29,8 +29,6 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
 
         {/* PROTECTED ROUTES */}
-
-        {/* Home */}
         <Route
           path="/home"
           element={
@@ -40,7 +38,6 @@ function App() {
           }
         />
 
-        {/* Fun Session – list utama */}
         <Route
           path="/funsession"
           element={
@@ -50,9 +47,6 @@ function App() {
           }
         />
 
-        
-
-        {/* Fun Session – detail per sesi (Start Session) */}
         <Route
           path="/funsession/:id"
           element={
@@ -62,7 +56,6 @@ function App() {
           }
         />
 
-        {/* Performance / Penilaian Kinerja */}
         <Route
           path="/performance"
           element={
@@ -72,7 +65,6 @@ function App() {
           }
         />
 
-        {/* Reward */}
         <Route
           path="/reward"
           element={
@@ -82,7 +74,6 @@ function App() {
           }
         />
 
-        {/* Training Report */}
         <Route
           path="/training-report"
           element={
@@ -92,7 +83,7 @@ function App() {
           }
         />
 
-        {/* Profile IP */}
+        {/* INI YANG PENTING BUAT PROFILE */}
         <Route
           path="/profile"
           element={
@@ -102,7 +93,7 @@ function App() {
           }
         />
 
-        {/* 404 fallback */}
+        {/* 404 */}
         <Route
           path="*"
           element={<h3 className="text-center mt-5">404 Not Found</h3>}
