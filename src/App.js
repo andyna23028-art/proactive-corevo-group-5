@@ -1,30 +1,34 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
-import PenilaianKinerja from './pages/PenilaianKinerja';
-import TrainingReport from './pages/TrainingReport';
-import ReportLayout from './components/ReportLayout';
-import PrivateRoute from './components/PrivateRoute';
-import Home from './pages/Home'; 
-import FunSession from './pages/FunSession'; 
-import FunSessionDetail from "./pages/FunSessionDetail";
-import Reward from './pages/Reward';
-import ProfileIP from './pages/ProfileIP';
-import "./App.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import LandingPage from "./pages/LandingPage";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+
+import PenilaianKinerja from "./pages/PenilaianKinerja";
+import TrainingReport from "./pages/TrainingReport"; // kalau dipakai di tempat lain
+import ReportLayout from "./components/ReportLayout";
+
+import PrivateRoute from "./components/PrivateRoute";
+
+import Home from "./pages/Home";
+import FunSession from "./pages/FunSession";
+import FunSessionDetail from "./pages/FunSessionDetail";
+import Reward from "./pages/Reward";
+import ProfileIP from "./pages/ProfileIP";
+
+import "./App.css";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
+        {/* PUBLIC ROUTES */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected routes */}
+        {/* PROTECTED ROUTES */}
 
         {/* Home */}
         <Route
@@ -36,7 +40,7 @@ function App() {
           }
         />
 
-        {/* Fun Session list */}
+        {/* Fun Session – list utama */}
         <Route
           path="/funsession"
           element={
@@ -46,12 +50,14 @@ function App() {
           }
         />
 
-        {/* Fun Session detail (Start Session → masuk sini) */}
+        
+
+        {/* Fun Session – detail per sesi (Start Session) */}
         <Route
           path="/funsession/:id"
           element={
             <PrivateRoute>
-              <FunSessionDetail />   {/* ← ini yang benar bos muda */}
+              <FunSessionDetail />
             </PrivateRoute>
           }
         />
@@ -96,8 +102,11 @@ function App() {
           }
         />
 
-        {/* 404 */}
-        <Route path="*" element={<h3 className="text-center mt-5">404 Not Found</h3>} />
+        {/* 404 fallback */}
+        <Route
+          path="*"
+          element={<h3 className="text-center mt-5">404 Not Found</h3>}
+        />
       </Routes>
     </Router>
   );

@@ -137,6 +137,11 @@ input[type=number] {
    FUN SESSION PAGE (FIGMA STYLE)
 =========================== */
 
+/* Container supaya konten nggak nempel pinggir banget */
+.fun-session-container {
+  padding-bottom: 3rem;
+}
+
 /* Tombol Create New */
 .fun-create-btn {
   border-radius: 999px;
@@ -156,6 +161,11 @@ input[type=number] {
 .fun-tab-btn.active {
   background-color: #007bff;
   color: #ffffff;
+}
+
+/* Wrapper card list agar lebarnya mirip Figma (tidak full page) */
+.fun-card-wrapper {
+  max-width: 960px;
 }
 
 /* Card utama Fun Session */
@@ -190,4 +200,196 @@ input[type=number] {
   background-color: #ffa826;
   border-color: #ffa826;
   color: #000000;
+}
+
+/* ===========================
+   FUN SESSION CREATE (FIGMA)
+=========================== */
+
+/* Backdrop agar card Create mengambang di tengah halaman Fun Session */
+.fun-create-backdrop {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.4); /* tipis aja biar mirip Figma */
+  z-index: 1050; /* di atas navbar & konten lain */
+}
+
+.fun-create-wrapper {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #d8e7ff;
+  padding: 40px 50px;
+  max-width: 900px;
+  width: 100%;
+  background-color: #f7fbff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Label form */
+.fun-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Input / textarea biru muda */
+.fun-input {
+  background: #eef5ff !important;
+  border: 1px solid #c8ddff !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+  font-size: 0.9rem !important;
+}
+
+.fun-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 141, 255, 0.25);
+}
+
+/* Tombol Cancel & Save */
+.fun-btn-cancel {
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-weight: 600 !important;
+}
+
+.fun-btn-save {
+  background: #007bff !important;
+  border-color: #007bff !important;
+  border-radius: 8px !important;
+  padding: 8px 28px !important;
+  font-weight: 600 !important;
+}
+
+.fun-btn-save:hover {
+  background: #005fd4 !important;
+  border-color: #005fd4 !important;
+}
+
+/* ===========================
+   REWARD PAGE (LAYOUT)
+=========================== */
+
+/* ruang bawah dikit biar napas */
+.reward-container {
+  padding-bottom: 3rem;
+}
+
+/* tombol Give Reward kanan atas */
+.reward-give-btn {
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+/* card tipe reward kiri (biru lembut) */
+.reward-type-card {
+  border-radius: 18px;
+  background: #eaf4ff;
+}
+
+.reward-type-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #4c8dff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.4rem;
+}
+
+/* card recent employees (abu lembut) */
+.reward-recent-card {
+  border-radius: 18px;
+  background: #f5f7fb;
+}
+
+/* avatar bulat dummy */
+.reward-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #9ca3af, #e5e7eb);
+}
+
+/* ===========================
+   REWARD POPUP (FIGMA STYLE)
+=========================== */
+
+/* LAYER belakang modal — tidak gelap, hanya pudar */
+.reward-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55); /* background Figma */
+  backdrop-filter: blur(2px);            /* blur lembut */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 900;   /* di atas konten normal, di bawah modal */
+}
+
+/* Modal wrapper */
+.reward-modal-wrapper {
+  width: 100%;
+  max-width: 720px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 2px solid #d8e7ff;
+  padding: 35px 40px;
+  background-color: #f7fbff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 999;    /* lebih tinggi dari backdrop */
+}
+
+/* Form label style */
+.reward-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+}
+
+/* Input/select/textarea biru muda */
+.reward-input {
+  background: #eef5ff !important;
+  border: 1px solid #c8ddff !important;
+  border-radius: 10px !important;
+  padding: 12px !important;
+  font-size: 0.9rem !important;
+}
+
+.reward-input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(76, 141, 255, 0.3);
+}
+
+/* Buttons */
+.reward-btn-cancel {
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+  font-weight: 600 !important;
+  background: white !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.reward-btn-save {
+  border-radius: 8px !important;
+  padding: 8px 26px !important;
+  font-weight: 600 !important;
+  background: #007bff !important;
+  border-color: #007bff !important;
+}
+
+.reward-btn-save:hover {
+  background: #005fd4 !important;
+}
+
+/* Agar dropdown Select tidak terpotong modal */
+.reward-input,
+.reward-input * {
+  z-index: 2000 !important;
 }

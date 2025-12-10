@@ -106,18 +106,19 @@ const AppNavbar = ({ isLoggedIn, activePage }) => {
               </>
             )}
 
-            {isLoggedIn && (
-              <Nav.Link as={Link} to="/profileip" className="p-0">
-                <img
-                  src="https://i.pravatar.cc/150?u=user"
-                  alt="Profile"
-                  className="rounded-circle border"
-                  width="40"
-                  height="40"
-                  style={{ objectFit: 'cover' }}
-                />
-              </Nav.Link>
-            )}
+           {isLoggedIn && (
+  <Nav.Link as={Link} to="/profile" className="p-0">
+    <img
+      src="https://i.pravatar.cc/150?u=user"
+      alt="Profile"
+      className="rounded-circle border"
+      width="40"
+      height="40"
+      style={{ objectFit: 'cover' }}
+    />
+  </Nav.Link>
+)}
+
           </div>
         </Navbar.Collapse>
       </Container>

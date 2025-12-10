@@ -3,8 +3,9 @@ import { Container, Button, Card, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Clock, People, CalendarCheck } from "react-bootstrap-icons";
 import AppNavbar from "../components/Navbar";
+import FunSessionCreate from "./FunSessionCreate"; // ⬅️ pakai sebagai modal
 
-// Data dummy – disesuaikan agar hanya 1 sesi upcoming seperti di Figma
+// Data dummy
 const SESSIONS = [
   {
     id: 1,
@@ -54,9 +55,7 @@ const SessionCard = ({ session }) => {
           {/* Info utama */}
           <Col>
             <h6 className="fw-semibold mb-1">{session.title}</h6>
-            <p className="text-muted small mb-3">
-              {session.description}
-            </p>
+            <p className="text-muted small mb-3">{session.description}</p>
 
             <div className="d-flex flex-wrap gap-3 text-muted small">
               <div className="d-flex align-items-center">
@@ -96,6 +95,7 @@ const SessionCard = ({ session }) => {
 
 export default function FunSession() {
   const [filter, setFilter] = useState("upcoming");
+  const [showCreate, setShowCreate] = useState(false); // ⬅️ kontrol modal
 
   const filteredSessions = SESSIONS.filter(
     (session) => session.type === filter
@@ -107,9 +107,12 @@ export default function FunSession() {
     <>
       <AppNavbar isLoggedIn={true} activePage="Fun Session" />
 
-      <Container fluid className="mt-4 px-4 pb-5 fun-session-container">
+      <Container
+        fluid
+        className="mt-4 px-4 pb-5 fun-session-container d-flex flex-column align-items-start"
+      >
         {/* HEADER */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-4 w-100">
           <div>
             <h1 className="fw-bold fs-3 mb-1">Fun Session</h1>
             <p className="text-muted mb-0">
@@ -120,9 +123,8 @@ export default function FunSession() {
           {showCreateNew && (
             <Button
               variant="primary"
-              as={Link}
-              to="/funsession/create"
               className="fun-create-btn px-4"
+              onClick={() => setShowCreate(true)} // ⬅️ buka modal
             >
               Create New
             </Button>
@@ -147,8 +149,8 @@ export default function FunSession() {
           </Button>
         </div>
 
-        {/* LIST SESI – dibungkus untuk lebar mirip Figma */}
-        <div className="fun-card-wrapper">
+        {/* LIST SESI */}
+        <div className="fun-card-wrapper w-100">
           {filteredSessions.length > 0 ? (
             filteredSessions.map((session) => (
               <div key={session.id} className="mb-4">
@@ -162,6 +164,11 @@ export default function FunSession() {
           )}
         </div>
       </Container>
+
+      {/* MODAL CREATE – overlay di atas halaman ini */}
+      {showCreate && (
+        <FunSessionCreate onClose={() => setShowCreate(false)} />
+      )}
     </>
   );
 }
