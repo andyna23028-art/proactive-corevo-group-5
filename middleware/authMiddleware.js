@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 
-exports.verifyToken = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try {
         //get token from header
         const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -30,9 +30,11 @@ exports.verifyToken = async (req, res, next) => {
         }
 
         //mengambil user yang request
+        // req.user = result.rows[0];
+        req.userId = result.rows[0].id;
         req.user = result.rows[0];
         next();
-        
+
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
             return res.status(403).json({
@@ -54,3 +56,4 @@ exports.verifyToken = async (req, res, next) => {
     }
 };
 
+export default authMiddleware;
